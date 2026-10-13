@@ -1,0 +1,18 @@
+<%- include('partials/header') %>
+
+<section class="error-page">
+  <div class="container error-container">
+    <div class="error-card">
+      <div class="error-icon">⚠️</div>
+      <h1 class="error-title"><%= typeof title !== 'undefined' ? title : 'Error' %></h1>
+      <p class="error-message"><%= typeof message !== 'undefined' ? message : 'An unexpected issue occurred.' %></p>
+      
+      <div class="error-actions">
+        <a href="/" class="btn btn-primary">Return to Homepage</a>
+        <a href="/products" class="btn btn-secondary">Browse Catalog</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

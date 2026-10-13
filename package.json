@@ -1,0 +1,34 @@
+{
+  "name": "cartiva",
+  "version": "1.0.0",
+  "description": "CARTIVA - A Clean, Beginner-Friendly Full-Stack E-Commerce Website",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "seed": "node scripts/seedProducts.js",
+    "create-admin": "node scripts/createAdmin.js"
+  },
+  "keywords": [
+    "ecommerce",
+    "express",
+    "mongodb",
+    "mongoose",
+    "ejs",
+    "nodejs",
+    "cartiva"
+  ],
+  "author": "CARTIVA Developer",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5"
+  }
+}

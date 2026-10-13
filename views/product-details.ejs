@@ -1,0 +1,152 @@
+<%- include('partials/header') %>
+
+<section class="product-details-page">
+  <div class="container">
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb-separator">/</span>
+      <a href="/products">Products</a>
+      <span class="breadcrumb-separator">/</span>
+      <a href="/products?category=<%= encodeURIComponent(product.category) %>"><%= product.category %></a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current"><%= product.name %></span>
+    </nav>
+
+    <!-- Product Layout Grid -->
+    <div class="product-detail-layout">
+      <!-- Media / Image Column -->
+      <div class="product-detail-media">
+        <div class="detail-image-wrapper">
+          <img 
+            src="<%= product.image %>" 
+            alt="<%= product.name %>" 
+            class="detail-main-image"
+            id="detail-product-image"
+            onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+          >
+        </div>
+      </div>
+
+      <!-- Info & Purchase Column -->
+      <div class="product-detail-info">
+        <div class="product-category-badge"><%= product.category %></div>
+        <h1 class="detail-product-title" id="detail-product-name"><%= product.name %></h1>
+        
+        <div class="detail-price-row">
+          <div class="detail-price" id="detail-product-price">$<%= product.price.toFixed(2) %></div>
+          <div class="product-stock-status <%= product.stock > 0 ? 'in-stock' : 'out-of-stock' %>" id="detail-stock-status">
+            <%= product.stock > 0 ? (product.stock <= 5 ? `Low Stock: Only ${product.stock} units remaining` : 'In Stock & Ready to Ship') : 'Currently Out of Stock' %>
+          </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <div class="detail-description-section">
+          <h2 class="detail-subheading">Product Description</h2>
+          <p class="detail-description-text"><%= product.description %></p>
+        </div>
+
+        <!-- Purchase & Add to Cart Form -->
+        <div class="detail-purchase-box">
+          <% if (product.stock > 0) { %>
+            <form action="/cart/add" method="POST" class="detail-add-form" id="detail-add-form">
+              <input type="hidden" name="productId" value="<%= product._id %>">
+
+              <div class="quantity-selector-group">
+                <label for="detail-quantity" class="quantity-label">Quantity:</label>
+                <div class="quantity-input-wrapper">
+                  <input 
+                    type="number" 
+                    id="detail-quantity" 
+                    name="quantity" 
+                    value="1" 
+                    min="1" 
+                    max="<%= product.stock %>"
+                    class="form-input quantity-input"
+                    required
+                  >
+                </div>
+                <span class="stock-note">(Max <%= product.stock %>)</span>
+              </div>
+
+              <div class="detail-actions">
+                <button type="submit" class="btn btn-primary btn-lg" id="detail-add-cart-btn">
+                  Add to Cart — $<%= product.price.toFixed(2) %>
+                </button>
+              </div>
+            </form>
+          <% } else { %>
+            <div class="out-of-stock-notice">
+              <p>This item is currently out of stock. Please check back later.</p>
+              <a href="/products" class="btn btn-outline">Explore Other Products</a>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Trust Badges List -->
+        <div class="product-perks">
+          <div class="perk-item">
+            <span class="perk-icon">🚚</span>
+            <div>
+              <strong>Reliable Dispatch</strong>
+              <span>Orders ship within 1-2 business days</span>
+            </div>
+          </div>
+          <div class="perk-item">
+            <span class="perk-icon">🛡️</span>
+            <div>
+              <strong>Quality Guarantee</strong>
+              <span>Carefully verified build quality and materials</span>
+            </div>
+          </div>
+          <div class="perk-item">
+            <span class="perk-icon">↩️</span>
+            <div>
+              <strong>Simple Returns</strong>
+              <span>30-day hassle-free return policy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <% if (relatedProducts && relatedProducts.length > 0) { %>
+      <div class="related-section">
+        <h2 class="section-title">You Might Also Like</h2>
+        <div class="product-grid">
+          <% relatedProducts.forEach(rel => { %>
+            <div class="product-card">
+              <div class="product-card-media">
+                <a href="/products/<%= rel._id %>">
+                  <img 
+                    src="<%= rel.image %>" 
+                    alt="<%= rel.name %>" 
+                    class="product-image"
+                    loading="lazy"
+                    onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+                  >
+                </a>
+                <span class="product-category-tag"><%= rel.category %></span>
+              </div>
+              <div class="product-card-body">
+                <h3 class="product-title">
+                  <a href="/products/<%= rel._id %>"><%= rel.name %></a>
+                </h3>
+                <div class="product-meta">
+                  <div class="product-price">$<%= rel.price.toFixed(2) %></div>
+                </div>
+                <div class="product-card-actions">
+                  <a href="/products/<%= rel._id %>" class="btn btn-secondary btn-sm">View Details</a>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

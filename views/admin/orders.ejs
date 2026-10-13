@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+
+<section class="admin-page">
+  <div class="container">
+    <div class="admin-header">
+      <div>
+        <span class="admin-badge">Admin Dashboard</span>
+        <h1 class="page-title">Customer Order Management</h1>
+        <p class="page-subtitle">View and update fulfillment statuses for all customer orders placed on CARTIVA.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/products" class="btn btn-secondary">&larr; Manage Products</a>
+      </div>
+    </div>
+
+    <% if (orders && orders.length > 0) { %>
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th class="text-right">Update Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+              <tr id="admin-order-<%= order._id %>">
+                <td>
+                  <strong>#<%= order._id.toString().slice(-8).toUpperCase() %></strong>
+                </td>
+                <td>
+                  <div><strong><%= order.shippingAddress.fullName %></strong></div>
+                  <div class="text-muted text-xs">
+                    <%= order.user ? (order.user.username ? '@' + order.user.username : (order.user.email || 'Customer')) : 'Guest Customer' %>
+                  </div>
+                </td>
+                <td class="text-muted text-sm">
+                  <%= new Date(order.createdAt).toLocaleDateString() %>
+                </td>
+                <td>
+                  <%= order.items.length %> <%= order.items.length === 1 ? 'item' : 'items' %>
+                  <div class="text-muted text-xs">
+                    (<%= order.items.reduce((acc, i) => acc + i.quantity, 0) %> total units)
+                  </div>
+                </td>
+                <td>
+                  <strong>$<%= order.total.toFixed(2) %></strong>
+                </td>
+                <td>
+                  <span class="order-status-badge status-<%= order.status.toLowerCase() %>">
+                    <%= order.status %>
+                  </span>
+                </td>
+                <td class="text-right">
+                  <form action="/admin/orders/<%= order._id %>/status" method="POST" class="inline-form">
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                      <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                      <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                      <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                      <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                    </select>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <h2 class="empty-state-title">No orders yet</h2>
+        <p class="empty-state-text">Customers have not placed any orders yet. Place an order through checkout to see it here.</p>
+        <div class="empty-state-action">
+          <a href="/products" class="btn btn-primary">Browse Store</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

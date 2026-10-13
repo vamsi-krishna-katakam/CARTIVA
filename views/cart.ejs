@@ -1,0 +1,167 @@
+<%- include('partials/header') %>
+
+<section class="cart-page">
+  <div class="container">
+    <div class="cart-header">
+      <h1 class="page-title">Shopping Cart</h1>
+      <% if (cartItems && cartItems.length > 0) { %>
+        <span class="cart-item-count-text">
+          (<%= totalItemsCount %> <%= totalItemsCount === 1 ? 'item' : 'items' %>)
+        </span>
+      <% } %>
+    </div>
+
+    <% if (cartItems && cartItems.length > 0) { %>
+      <div class="cart-layout">
+        <!-- Cart Items List / Table -->
+        <div class="cart-items-wrapper">
+          <div class="cart-table-header">
+            <span class="col-product">Product</span>
+            <span class="col-price">Price</span>
+            <span class="col-quantity">Quantity</span>
+            <span class="col-subtotal">Subtotal</span>
+            <span class="col-action">Action</span>
+          </div>
+
+          <div class="cart-items-list">
+            <% cartItems.forEach(item => { %>
+              <div class="cart-item-row" id="cart-item-<%= item.product._id %>">
+                <!-- Product Media & Info -->
+                <div class="cart-item-info">
+                  <a href="/products/<%= item.product._id %>" class="cart-item-img-link">
+                    <img 
+                      src="<%= item.product.image %>" 
+                      alt="<%= item.product.name %>" 
+                      class="cart-item-img"
+                      onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+                    >
+                  </a>
+                  <div class="cart-item-details">
+                    <span class="cart-item-category"><%= item.product.category %></span>
+                    <h3 class="cart-item-title">
+                      <a href="/products/<%= item.product._id %>"><%= item.product.name %></a>
+                    </h3>
+                    <div class="cart-item-stock-hint">
+                      <%= item.product.stock %> in stock
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Unit Price -->
+                <div class="cart-item-price">
+                  <span class="mobile-label">Unit Price: </span>
+                  $<%= item.product.price.toFixed(2) %>
+                </div>
+
+                <!-- Quantity Adjust Controls -->
+                <div class="cart-item-quantity">
+                  <div class="quantity-control-widget">
+                    <!-- Decrease button -->
+                    <form action="/cart/update" method="POST" class="inline-form">
+                      <input type="hidden" name="productId" value="<%= item.product._id %>">
+                      <input type="hidden" name="action" value="decrease">
+                      <button type="submit" class="qty-btn qty-decrease" aria-label="Decrease quantity" title="Decrease">−</button>
+                    </form>
+
+                    <span class="qty-display"><%= item.quantity %></span>
+
+                    <!-- Increase button -->
+                    <form action="/cart/update" method="POST" class="inline-form">
+                      <input type="hidden" name="productId" value="<%= item.product._id %>">
+                      <input type="hidden" name="action" value="increase">
+                      <button 
+                        type="submit" 
+                        class="qty-btn qty-increase" 
+                        aria-label="Increase quantity" 
+                        title="Increase"
+                        <%= item.quantity >= item.product.stock ? 'disabled' : '' %>
+                      >+</button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Item Subtotal -->
+                <div class="cart-item-subtotal">
+                  <span class="mobile-label">Subtotal: </span>
+                  <strong>$<%= item.subtotal.toFixed(2) %></strong>
+                </div>
+
+                <!-- Remove Item -->
+                <div class="cart-item-remove">
+                  <form action="/cart/remove" method="POST" class="inline-form">
+                    <input type="hidden" name="productId" value="<%= item.product._id %>">
+                    <button type="submit" class="btn-remove" title="Remove item from cart" aria-label="Remove item">
+                      ✕
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+
+          <div class="cart-continue-bar">
+            <a href="/products" class="btn btn-outline btn-sm">&larr; Continue Shopping</a>
+          </div>
+        </div>
+
+        <!-- Order Summary Card -->
+        <aside class="cart-summary-sidebar">
+          <div class="cart-summary-card">
+            <h2 class="summary-title">Order Summary</h2>
+
+            <div class="summary-row">
+              <span>Items Subtotal</span>
+              <span id="summary-subtotal">$<%= grandTotal.toFixed(2) %></span>
+            </div>
+
+            <div class="summary-row">
+              <span>Standard Shipping</span>
+              <span class="text-free">FREE</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Estimated Tax</span>
+              <span>$0.00</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row summary-total-row">
+              <span>Total</span>
+              <span class="summary-grand-total" id="summary-grand-total">$<%= grandTotal.toFixed(2) %></span>
+            </div>
+
+            <div class="summary-actions">
+              <a href="/checkout" class="btn btn-primary btn-block btn-lg" id="btn-proceed-checkout">
+                Proceed to Checkout
+              </a>
+              <% if (!locals.currentUser) { %>
+                <small class="login-checkout-note" style="display:block; text-align:center; margin-top:8px; color: #64748b; font-size: 0.85rem;">
+                  🔒 You will be asked to sign in or register to complete your order.
+                </small>
+              <% } %>
+            </div>
+
+            <div class="summary-security-note">
+              <span>🔒 Guaranteed safe checkout. Real prices computed on server.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    <% } else { %>
+      <!-- Friendly Empty Cart State -->
+      <div class="empty-state empty-cart">
+        <div class="empty-state-icon">🛒</div>
+        <h2 class="empty-state-title">Your shopping cart is empty</h2>
+        <p class="empty-state-text">
+          Looks like you haven't added any essentials to your cart yet. Explore our curated catalog to find items you love!
+        </p>
+        <div class="empty-state-action">
+          <a href="/products" class="btn btn-primary" id="btn-empty-cart-shop">Start Shopping</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

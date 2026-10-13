@@ -1,0 +1,164 @@
+<%- include('partials/header') %>
+
+<section class="checkout-page">
+  <div class="container">
+    <div class="checkout-header">
+      <h1 class="page-title">Checkout & Order Placement</h1>
+      <p class="page-subtitle">Please verify your shipping address and review your order before completing checkout.</p>
+    </div>
+
+    <div class="checkout-layout">
+      <!-- Shipping Details Form Column -->
+      <div class="checkout-form-column">
+        <div class="checkout-card">
+          <div class="card-header">
+            <span class="step-badge">1</span>
+            <h2 class="card-title">Shipping Address</h2>
+          </div>
+
+          <form action="/checkout" method="POST" id="checkout-form" class="standard-form">
+            <div class="form-group">
+              <label for="fullName" class="form-label">Full Name <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="fullName" 
+                name="fullName" 
+                class="form-input" 
+                placeholder="Jane Doe" 
+                value="<%= formData.fullName || '' %>" 
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="address" class="form-label">Street Address <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="address" 
+                name="address" 
+                class="form-input" 
+                placeholder="123 Market Street, Apt 4B" 
+                value="<%= formData.address || '' %>" 
+                required
+              >
+            </div>
+
+            <div class="form-row form-row-3">
+              <div class="form-group">
+                <label for="city" class="form-label">City <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city" 
+                  class="form-input" 
+                  placeholder="Austin" 
+                  value="<%= formData.city || '' %>" 
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="state" class="form-label">State / Province <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="state" 
+                  name="state" 
+                  class="form-input" 
+                  placeholder="TX" 
+                  value="<%= formData.state || '' %>" 
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="postalCode" class="form-label">Postal / ZIP Code <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="postalCode" 
+                  name="postalCode" 
+                  class="form-input" 
+                  placeholder="78701" 
+                  value="<%= formData.postalCode || '' %>" 
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Demo Mock Payment Notice -->
+            <div class="checkout-payment-box">
+              <div class="payment-box-header">
+                <span class="step-badge">2</span>
+                <h3 class="payment-title">Payment Method (Demo Mode)</h3>
+              </div>
+              <div class="demo-payment-banner">
+                <div class="demo-payment-icon">💳</div>
+                <div>
+                  <strong>Mock Demo Payment Active</strong>
+                  <p>
+                    For this portfolio project, orders are placed in demo mode. No credit card or sensitive payment details are needed. 
+                    Real inventory will be safely deducted upon clicking <strong>Place Order</strong>.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkout-actions">
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-place-order">
+                Place Order — $<%= grandTotal.toFixed(2) %>
+              </button>
+              <a href="/cart" class="btn btn-secondary btn-block">Back to Shopping Cart</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Order Review Sidebar -->
+      <aside class="checkout-summary-column">
+        <div class="cart-summary-card">
+          <h2 class="summary-title">Order Items (<%= cartItems.length %>)</h2>
+
+          <div class="checkout-items-mini-list">
+            <% cartItems.forEach(item => { %>
+              <div class="checkout-mini-item">
+                <img 
+                  src="<%= item.product.image %>" 
+                  alt="<%= item.name %>" 
+                  class="mini-item-img"
+                  onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+                >
+                <div class="mini-item-details">
+                  <div class="mini-item-name"><%= item.name %></div>
+                  <div class="mini-item-qty">Qty: <%= item.quantity %> &times; $<%= item.price.toFixed(2) %></div>
+                </div>
+                <div class="mini-item-subtotal">
+                  $<%= item.subtotal.toFixed(2) %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row">
+            <span>Items Subtotal</span>
+            <span>$<%= grandTotal.toFixed(2) %></span>
+          </div>
+
+          <div class="summary-row">
+            <span>Standard Shipping</span>
+            <span class="text-free">FREE</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row summary-total-row">
+            <span>Order Total</span>
+            <span class="summary-grand-total">$<%= grandTotal.toFixed(2) %></span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

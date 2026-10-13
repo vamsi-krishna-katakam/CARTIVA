@@ -1,0 +1,164 @@
+<%- include('partials/header') %>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <span class="hero-tag">Curated Collection 2026</span>
+      <h1 class="hero-title">Everyday Essentials, Refined for Modern Living.</h1>
+      <p class="hero-subtitle">
+        Discover thoughtfully designed home goods, office accessories, and lifestyle staples crafted for functionality and enduring simplicity.
+      </p>
+      <div class="hero-actions">
+        <a href="/products" class="btn btn-primary" id="hero-shop-button">Explore Catalog</a>
+        <a href="/products?category=Home+Essentials" class="btn btn-secondary">Home Essentials</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Store Features Banner -->
+<section class="features-section">
+  <div class="container features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <div>
+        <h3 class="feature-title">Fast, Transparent Delivery</h3>
+        <p class="feature-text">Track your orders from placement to doorstep with ease.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <div>
+        <h3 class="feature-title">Handpicked Quality</h3>
+        <p class="feature-text">Every item is chosen for durability and minimalist design.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div>
+        <h3 class="feature-title">Secure & Transparent</h3>
+        <p class="feature-text">Server-validated checkout with verified product pricing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Highlights -->
+<section class="section categories-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Shop by Category</h2>
+      <a href="/products" class="section-link">View all categories &rarr;</a>
+    </div>
+
+    <div class="categories-grid">
+      <a href="/products?category=Home+Essentials" class="category-tile">
+        <div class="category-tile-content">
+          <span class="category-icon">🛋️</span>
+          <h3 class="category-name">Home Essentials</h3>
+          <span class="category-action">Browse Items &rarr;</span>
+        </div>
+      </a>
+      <a href="/products?category=Kitchen+Accessories" class="category-tile">
+        <div class="category-tile-content">
+          <span class="category-icon">☕</span>
+          <h3 class="category-name">Kitchen Accessories</h3>
+          <span class="category-action">Browse Items &rarr;</span>
+        </div>
+      </a>
+      <a href="/products?category=Office+Supplies" class="category-tile">
+        <div class="category-tile-content">
+          <span class="category-icon">🖋️</span>
+          <h3 class="category-name">Office Supplies</h3>
+          <span class="category-action">Browse Items &rarr;</span>
+        </div>
+      </a>
+      <a href="/products?category=Lifestyle" class="category-tile">
+        <div class="category-tile-content">
+          <span class="category-icon">🌿</span>
+          <h3 class="category-name">Lifestyle</h3>
+          <span class="category-action">Browse Items &rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="section featured-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-badge">Popular Picks</span>
+        <h2 class="section-title">Featured Products</h2>
+      </div>
+      <a href="/products" class="btn btn-outline">All Products</a>
+    </div>
+
+    <div class="product-grid">
+      <% if (featuredProducts && featuredProducts.length > 0) { %>
+        <% featuredProducts.forEach(product => { %>
+          <div class="product-card" id="product-card-<%= product._id %>">
+            <div class="product-card-media">
+              <a href="/products/<%= product._id %>">
+                <img 
+                  src="<%= product.image %>" 
+                  alt="<%= product.name %>" 
+                  class="product-image"
+                  loading="lazy"
+                  onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+                >
+              </a>
+              <span class="product-category-tag"><%= product.category %></span>
+            </div>
+
+            <div class="product-card-body">
+              <h3 class="product-title">
+                <a href="/products/<%= product._id %>"><%= product.name %></a>
+              </h3>
+              <p class="product-description-snippet">
+                <%= product.description.length > 70 ? product.description.substring(0, 70) + '...' : product.description %>
+              </p>
+              
+              <div class="product-meta">
+                <div class="product-price">$<%= product.price.toFixed(2) %></div>
+                <div class="product-stock-status <%= product.stock > 0 ? 'in-stock' : 'out-of-stock' %>">
+                  <%= product.stock > 0 ? (product.stock <= 5 ? `Only ${product.stock} left` : 'In Stock') : 'Out of Stock' %>
+                </div>
+              </div>
+
+              <div class="product-card-actions">
+                <a href="/products/<%= product._id %>" class="btn btn-secondary btn-sm">Details</a>
+                <% if (product.stock > 0) { %>
+                  <form action="/cart/add" method="POST" class="add-to-cart-form">
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                  </form>
+                <% } else { %>
+                  <button class="btn btn-disabled btn-sm" disabled>Sold Out</button>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="empty-state">
+          <p>No featured products available at this time.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="cta-section">
+  <div class="container cta-inner">
+    <h2 class="cta-title">Upgrade Your Daily Space with CARTIVA</h2>
+    <p class="cta-subtitle">Simple, honest pricing with items that last.</p>
+    <a href="/products" class="btn btn-primary">Start Shopping Now</a>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

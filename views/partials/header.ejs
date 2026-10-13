@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'CARTIVA — Modern Essentials' %></title>
+  <meta name="description" content="CARTIVA is a modern e-commerce storefront for home essentials, office supplies, kitchen accessories, and everyday lifestyle products.">
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Plain Vanilla CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Global Navigation Header -->
+  <header class="site-header">
+    <div class="header-inner container">
+      <!-- Brand Logo / Wordmark -->
+      <a href="/" class="brand-logo" id="nav-brand-logo">
+        <span class="brand-text">CARTIVA</span>
+        <span class="brand-dot">.</span>
+      </a>
+
+      <!-- Header Search Bar -->
+      <form action="/products" method="GET" class="header-search-form" id="header-search-form" role="search">
+        <input 
+          type="search" 
+          name="search" 
+          id="header-search-input"
+          placeholder="Search products, essentials..." 
+          value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+          aria-label="Search products"
+        >
+        <button type="submit" id="header-search-button" class="btn-search">Search</button>
+      </form>
+
+      <!-- Navigation Links -->
+      <nav class="site-nav" aria-label="Main Navigation">
+        <ul class="nav-list">
+          <li>
+            <a href="/" class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/' ? 'active' : '' %>" id="nav-home">Home</a>
+          </li>
+          <li>
+            <a href="/products" class="nav-link <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/products') ? 'active' : '' %>" id="nav-products">Products</a>
+          </li>
+
+          <% if (locals.currentUser) { %>
+            <% if (locals.currentUser.role === 'admin') { %>
+              <li>
+                <a href="/admin/products" class="nav-link nav-admin-badge <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/admin') ? 'active' : '' %>" id="nav-admin">Admin</a>
+              </li>
+            <% } %>
+            <li>
+              <a href="/orders" class="nav-link <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/orders') ? 'active' : '' %>" id="nav-orders">Orders</a>
+            </li>
+            <li class="nav-user-item">
+              <span class="user-greeting">Hi, <%= locals.currentUser.name.split(' ')[0] %></span>
+              <a href="/logout" class="nav-link-secondary" id="nav-logout">Sign Out</a>
+            </li>
+          <% } else { %>
+            <li>
+              <a href="/login" class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/login' ? 'active' : '' %>" id="nav-login">Sign In</a>
+            </li>
+            <li>
+              <a href="/register" class="nav-link-btn" id="nav-register">Register</a>
+            </li>
+          <% } %>
+
+          <!-- Cart Badge Item -->
+          <li>
+            <a href="/cart" class="nav-cart-btn <%= typeof currentPath !== 'undefined' && currentPath === '/cart' ? 'active' : '' %>" id="nav-cart" aria-label="Shopping Cart">
+              <span class="cart-label">Cart</span>
+              <span class="cart-badge" id="header-cart-badge"><%= locals.cartCount || 0 %></span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Global Flash Alerts Container -->
+  <% if (locals.flashSuccess || (typeof success !== 'undefined' && success)) { %>
+    <div class="container alert-container">
+      <div class="alert alert-success" role="alert" id="global-alert-success">
+        <span class="alert-icon">✓</span>
+        <span><%= locals.flashSuccess || success %></span>
+      </div>
+    </div>
+  <% } %>
+
+  <% if (locals.flashError || (typeof error !== 'undefined' && error)) { %>
+    <div class="container alert-container">
+      <div class="alert alert-error" role="alert" id="global-alert-error">
+        <span class="alert-icon">⚠</span>
+        <span><%= locals.flashError || error %></span>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- Main Page Content Starts -->
+  <main class="main-content">

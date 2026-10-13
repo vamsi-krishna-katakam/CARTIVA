@@ -1,0 +1,93 @@
+<%- include('partials/header') %>
+
+<section class="auth-page">
+  <div class="container auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1 class="auth-title">Create Your Account</h1>
+        <p class="auth-subtitle">Join CARTIVA to save shipping addresses and access your complete order history.</p>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error" role="alert">
+          <span class="alert-icon">⚠</span>
+          <span><%= error %></span>
+        </div>
+      <% } %>
+
+      <form action="/register" method="POST" class="auth-form" id="register-form">
+        <div class="form-group">
+          <label for="name" class="form-label">Full Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            class="form-input" 
+            placeholder="John Doe" 
+            value="<%= typeof formData !== 'undefined' && formData.name ? formData.name : '' %>"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="username" class="form-label">Username <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="form-input" 
+            placeholder="Choose a username (e.g. alex99)" 
+            value="<%= typeof formData !== 'undefined' && formData.username ? formData.username : '' %>"
+            minlength="3"
+            pattern="[a-zA-Z0-9_.-]+"
+            title="Username must be at least 3 characters and contain only letters, numbers, underscores, dots, or dashes."
+            required
+            autocomplete="username"
+          >
+          <small class="form-hint" style="display:block; margin-top:4px; font-size:0.8rem; color:#64748b;">
+            Unique username, min. 3 characters (letters, numbers, underscores)
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password (min. 6 characters) <span class="required">*</span></label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-input" 
+            placeholder="••••••••" 
+            minlength="6"
+            required
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password <span class="required">*</span></label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword" 
+            class="form-input" 
+            placeholder="••••••••" 
+            minlength="6"
+            required
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-register-submit">
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="/login" class="auth-link">Sign in here</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

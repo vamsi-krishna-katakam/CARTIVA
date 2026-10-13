@@ -1,0 +1,85 @@
+<%- include('../partials/header') %>
+
+<section class="admin-page">
+  <div class="container">
+    <div class="admin-header">
+      <div>
+        <span class="admin-badge">Admin Dashboard</span>
+        <h1 class="page-title">Product Catalog Management</h1>
+        <p class="page-subtitle">Add, update, or remove inventory items across the CARTIVA store.</p>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/orders" class="btn btn-secondary">Customer Orders &rarr;</a>
+        <a href="/admin/products/new" class="btn btn-primary" id="btn-add-product">+ Add New Product</a>
+      </div>
+    </div>
+
+    <% if (products && products.length > 0) { %>
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Created</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(prod => { %>
+              <tr id="admin-row-<%= prod._id %>">
+                <td class="cell-img">
+                  <img 
+                    src="<%= prod.image %>" 
+                    alt="<%= prod.name %>" 
+                    class="admin-thumb"
+                    onerror="this.onerror=null; this.src='/images/placeholder.svg';"
+                  >
+                </td>
+                <td class="cell-name">
+                  <strong><%= prod.name %></strong>
+                  <div class="text-muted text-xs">ID: <%= prod._id %></div>
+                </td>
+                <td>
+                  <span class="product-category-tag"><%= prod.category %></span>
+                </td>
+                <td>
+                  <strong>$<%= prod.price.toFixed(2) %></strong>
+                </td>
+                <td>
+                  <span class="stock-pill <%= prod.stock > 0 ? (prod.stock <= 5 ? 'stock-low' : 'stock-ok') : 'stock-out' %>">
+                    <%= prod.stock %> units
+                  </span>
+                </td>
+                <td class="text-muted text-sm">
+                  <%= new Date(prod.createdAt).toLocaleDateString() %>
+                </td>
+                <td class="text-right cell-actions">
+                  <a href="/admin/products/<%= prod._id %>/edit" class="btn btn-secondary btn-sm" id="btn-edit-<%= prod._id %>">Edit</a>
+                  
+                  <form action="/admin/products/<%= prod._id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Are you sure you want to delete <%= prod.name %>? This action cannot be undone.');">
+                    <button type="submit" class="btn btn-danger btn-sm" id="btn-delete-<%= prod._id %>">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <h2 class="empty-state-title">No products found</h2>
+        <p class="empty-state-text">Your store currently has no products. Start by adding one or run the sample seed script.</p>
+        <div class="empty-state-action">
+          <a href="/admin/products/new" class="btn btn-primary">+ Add First Product</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

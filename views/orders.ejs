@@ -1,0 +1,62 @@
+<%- include('partials/header') %>
+
+<section class="orders-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">My Orders</h1>
+      <p class="page-subtitle">Track, review, and view receipt details for your previous purchases.</p>
+    </div>
+
+    <% if (orders && orders.length > 0) { %>
+      <div class="orders-list">
+        <% orders.forEach(order => { %>
+          <div class="order-card" id="order-card-<%= order._id %>">
+            <div class="order-card-header">
+              <div class="order-meta-info">
+                <span class="order-number-label">Order #<%= order._id.toString().slice(-8).toUpperCase() %></span>
+                <span class="order-date-label">Placed on <%= new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></span>
+              </div>
+              <div class="order-status-badge status-<%= order.status.toLowerCase() %>">
+                <%= order.status %>
+              </div>
+            </div>
+
+            <div class="order-card-body">
+              <div class="order-items-preview">
+                <span class="order-items-count">
+                  <%= order.items.reduce((sum, i) => sum + i.quantity, 0) %> item(s):
+                </span>
+                <ul class="order-preview-list">
+                  <% order.items.forEach(item => { %>
+                    <li><%= item.quantity %> &times; <%= item.name %></li>
+                  <% }); %>
+                </ul>
+              </div>
+
+              <div class="order-summary-side">
+                <div class="order-total-amount">
+                  <span class="label">Total:</span>
+                  <span class="value">$<%= order.total.toFixed(2) %></span>
+                </div>
+                <a href="/orders/<%= order._id %>" class="btn btn-secondary btn-sm" id="btn-view-order-<%= order._id %>">
+                  View Order Details &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <h2 class="empty-state-title">No orders yet</h2>
+        <p class="empty-state-text">You haven't placed any orders with CARTIVA yet. Once you make a purchase, it will appear here.</p>
+        <div class="empty-state-action">
+          <a href="/products" class="btn btn-primary">Start Shopping</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
